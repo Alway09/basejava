@@ -24,18 +24,29 @@ public class ArrayStorage {
         int index = findIndex(uuid);
 
         if(index == -1){
-            System.out.println("ArrayStorage::get - Invalid index");
+            System.out.println("ArrayStorage::get - Resume with UUID " + uuid + " not found");
             return null;
         }
 
         return storage[index];
     }
 
+    public void update(Resume resume){
+        int index = findIndex(resume.getUuid());
+
+        if(index == -1){
+            System.out.println("ArrayStorage::update - Resume with UUID " + resume.getUuid() + " not found");
+            return;
+        }
+
+        storage[index] = resume;
+    }
+
     public void delete(String uuid){
         int index = findIndex(uuid);
 
         if(index == -1){
-            //System.out.println("ArrayStorage::delete - Invalid index");
+            System.out.println("ArrayStorage::delete - Resume with UUID " + uuid + " not found");
             return;
         }
 
