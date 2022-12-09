@@ -1,3 +1,6 @@
+package com.jobresearch.webapp.resumemodule.storage;
+
+import com.jobresearch.webapp.resumemodule.model.Resume;
 import java.util.Arrays;
 
 public class ArrayStorage {
@@ -7,12 +10,12 @@ public class ArrayStorage {
 
     public void save(Resume resume){
         if(size >= STORAGE_MAX_SIZE){
-            System.out.println("ArrayStorage::save - Storage is full");
+            System.out.println("com.jobresearch.webapp.resumemodule.storage.ArrayStorage::save - Storage is full");
             return;
         }
 
         if(findIndex(resume.getUuid()) != -1) {
-            System.out.println("ArrayStorage::save - Resume is duplicated, not saved");
+            System.out.println("com.jobresearch.webapp.resumemodule.storage.ArrayStorage::save - com.jobresearch.webapp.resumemodule.model.Resume is duplicated, not saved");
             return;
         }
 
@@ -24,7 +27,7 @@ public class ArrayStorage {
         int index = findIndex(uuid);
 
         if(index == -1){
-            System.out.println("ArrayStorage::get - Resume with UUID " + uuid + " not found");
+            System.out.println("com.jobresearch.webapp.resumemodule.storage.ArrayStorage::get - com.jobresearch.webapp.resumemodule.model.Resume with UUID " + uuid + " not found");
             return null;
         }
 
@@ -35,7 +38,7 @@ public class ArrayStorage {
         int index = findIndex(resume.getUuid());
 
         if(index == -1){
-            System.out.println("ArrayStorage::update - Resume with UUID " + resume.getUuid() + " not found");
+            System.out.println("com.jobresearch.webapp.resumemodule.storage.ArrayStorage::update - com.jobresearch.webapp.resumemodule.model.Resume with UUID " + resume.getUuid() + " not found");
             return;
         }
 
@@ -46,7 +49,7 @@ public class ArrayStorage {
         int index = findIndex(uuid);
 
         if(index == -1){
-            System.out.println("ArrayStorage::delete - Resume with UUID " + uuid + " not found");
+            System.out.println("com.jobresearch.webapp.resumemodule.storage.ArrayStorage::delete - com.jobresearch.webapp.resumemodule.model.Resume with UUID " + uuid + " not found");
             return;
         }
 

@@ -1,9 +1,14 @@
+package com.jobresearch.webapp.resumemodule;
+
+import com.jobresearch.webapp.resumemodule.model.Resume;
+import com.jobresearch.webapp.resumemodule.storage.ArrayStorage;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * Interactive test for ArrayStorage implementation
+ * Interactive test for com.jobresearch.webapp.resumemodule.storage.ArrayStorage implementation
  * (just run, no need to understand)
  */
 public class Main {
@@ -35,7 +40,7 @@ public class Main {
                     break;
                 case "save":
                     r = new Resume();
-                    r.uuid = uuid;
+                    r.setUuid(uuid);
                     ARRAY_STORAGE.save(r);
                     printAll();
                     break;

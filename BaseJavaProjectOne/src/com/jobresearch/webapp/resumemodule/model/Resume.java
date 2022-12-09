@@ -1,8 +1,14 @@
+package com.jobresearch.webapp.resumemodule.model;
+
 public class Resume {
-    public String uuid;
+    private String uuid;
 
     public String getUuid(){
         return uuid;
+    }
+
+    public void setUuid(String id){
+        uuid = id;
     }
     @Override
     public String toString(){
