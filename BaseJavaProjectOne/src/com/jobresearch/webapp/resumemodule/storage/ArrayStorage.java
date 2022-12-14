@@ -1,11 +1,14 @@
 package com.jobresearch.webapp.resumemodule.storage;
 
 import com.jobresearch.webapp.resumemodule.model.Resume;
-import java.util.Arrays;
 
 public class ArrayStorage extends AbstractArrayStorage {
     @Override
     public final void save(Resume resume){
+        if(resume == null){
+            return;
+        }
+
         if(size >= STORAGE_MAX_SIZE){
             System.out.println("ArrayStorage::save - Storage is full");
             return;
@@ -23,6 +26,10 @@ public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
     public final void delete(String uuid){
+        if(uuid == null){
+            return;
+        }
+
         int index = findIndex(uuid);
 
         if(index == -1){
@@ -37,7 +44,7 @@ public class ArrayStorage extends AbstractArrayStorage {
 
     protected final int findIndex(String uuid){
         for(int i = 0; i < size; ++i){
-            if(storage[i].getUuid().equalsIgnoreCase(uuid)){
+            if(uuid.equals(storage[i].getUuid())){
                 return i;
             }
         }
