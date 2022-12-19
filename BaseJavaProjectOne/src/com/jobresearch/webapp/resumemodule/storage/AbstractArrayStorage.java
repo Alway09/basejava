@@ -1,5 +1,6 @@
 package com.jobresearch.webapp.resumemodule.storage;
 
+import com.jobresearch.webapp.resumemodule.exception.*;
 import com.jobresearch.webapp.resumemodule.model.Resume;
 import java.util.Arrays;
 
@@ -14,15 +15,13 @@ public abstract class AbstractArrayStorage implements StorageInterface {
         }
 
         if(size >= STORAGE_MAX_SIZE){
-            System.out.println("ArrayStorage::save - Storage is full");
-            return;
+            throw new StorageException(resume.getUuid(), "Storage is full");
         }
 
         int index = findIndex(resume.getUuid());
 
         if(index >= 0) {
-            System.out.println("ArrayStorage::save - Resume is duplicated, not saved");
-            return;
+            throw new StorageException(resume.getUuid(), "Resume is duplicated");
         }
 
         insertResume(resume, index);
@@ -38,8 +37,7 @@ public abstract class AbstractArrayStorage implements StorageInterface {
         int index = findIndex(uuid);
 
         if(index < 0){
-            System.out.println("ArrayStorage::delete - Resume with UUID " + uuid + " not found");
-            return;
+            throw new NotExistStorageException(uuid);
         }
 
         fillDeletedResume(index);
@@ -51,8 +49,7 @@ public abstract class AbstractArrayStorage implements StorageInterface {
         int index = findIndex(uuid);
 
         if(index < 0){
-            System.out.println("AbstractArrayStorage::get - Resume with UUID " + uuid + " not found");
-            return null;
+            throw new NotExistStorageException(uuid);
         }
 
         return storage[index];
@@ -63,8 +60,7 @@ public abstract class AbstractArrayStorage implements StorageInterface {
         int index = findIndex(resume.getUuid());
 
         if(index < 0){
-            System.out.println("AbstractArrayStorage::update - Resume with UUID " + resume.getUuid() + " not found");
-            return;
+            throw new NotExistStorageException(resume.getUuid());
         }
 
         storage[index] = resume;

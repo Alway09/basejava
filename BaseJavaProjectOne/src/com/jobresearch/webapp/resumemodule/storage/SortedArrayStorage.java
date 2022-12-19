@@ -20,8 +20,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     protected final int findIndex(String uuid){
-        Resume key = new Resume();
-        key.setUuid(uuid);
+        Resume key = new Resume(uuid);
         int index = Arrays.binarySearch(storage, 0, size, key);
 
         return index;
