@@ -8,6 +8,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class ArrayStorageTest extends AbstractArrayStorageTest {
 
     public ArrayStorageTest(){
-        arrayStorage = new ArrayStorage();
+        super(new ArrayStorage());
     }
 }
