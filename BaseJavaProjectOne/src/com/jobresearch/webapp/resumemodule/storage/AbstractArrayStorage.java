@@ -5,7 +5,7 @@ import com.jobresearch.webapp.resumemodule.model.Resume;
 import java.util.Arrays;
 
 public abstract class AbstractArrayStorage implements StorageInterface {
-    public static final int STORAGE_MAX_SIZE = 10000;
+    protected static final int STORAGE_MAX_SIZE = 10000;
     protected int size = 0;
     protected final Resume[] storage = new Resume[STORAGE_MAX_SIZE];
 

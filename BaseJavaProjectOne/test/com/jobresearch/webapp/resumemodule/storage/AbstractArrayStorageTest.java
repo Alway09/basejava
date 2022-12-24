@@ -10,11 +10,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractArrayStorageTest {
     private final StorageInterface arrayStorage;
-    private final String UUID_1 = "UUID_1";
-    private final String UUID_2 = "UUID_2";
-    private final String UUID_3 = "UUID_3";
-    private final String UUID_4 = "UUID_4";
-    private final String UUID_A = "UUID_A";
+    private static final String UUID_1 = "UUID_1";
+    private static final Resume RESUME_1 = new Resume(UUID_1);
+    private static final String UUID_2 = "UUID_2";
+    private static final Resume RESUME_2 = new Resume(UUID_2);
+    private static final String UUID_3 = "UUID_3";
+    private static final Resume RESUME_3 = new Resume(UUID_3);
+    private static final String UUID_4 = "UUID_4";
+    private static final Resume RESUME_4 = new Resume(UUID_4);
+    private static final String UUID_A = "UUID_A";
+    private static final Resume RESUME_A = new Resume(UUID_A);
 
     public AbstractArrayStorageTest(StorageInterface storage){
         arrayStorage = storage;
@@ -22,10 +27,10 @@ public abstract class AbstractArrayStorageTest {
 
     @BeforeEach
     void setUp() {
-        arrayStorage.save(new Resume(UUID_1));
-        arrayStorage.save(new Resume(UUID_2));
-        arrayStorage.save(new Resume(UUID_3));
-        arrayStorage.save(new Resume(UUID_4));
+        arrayStorage.save(RESUME_1);
+        arrayStorage.save(RESUME_2);
+        arrayStorage.save(RESUME_3);
+        arrayStorage.save(RESUME_4);
     }
     @AfterEach
     void tearDown(){
@@ -34,28 +39,34 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     void save() {
-        arrayStorage.save(new Resume(UUID_A));
+        arrayStorage.save(RESUME_A);
         //assertEquals(UUID_A, arrayStorage.get(UUID_A).getUuid());
-        assertTrue(UUID_A.equals(arrayStorage.get(UUID_A).getUuid()));
+        assertTrue(RESUME_A.getUuid().equals(arrayStorage.get(UUID_A).getUuid()));
+        assertEquals(5, arrayStorage.size());
     }
 
     @Test
     void saveExist() {
         ExistStorageException thrown = assertThrows(ExistStorageException.class,
                 () ->{
-                    arrayStorage.save(new Resume(UUID_2));
+                    arrayStorage.save(RESUME_2);
                 });
     }
 
     @Test
     void saveInFull() {
-        for(int i = 5; i <= AbstractArrayStorage.STORAGE_MAX_SIZE; ++i){
-            arrayStorage.save(new Resume());
+        try{
+            for(int i = 5; i <= AbstractArrayStorage.STORAGE_MAX_SIZE; ++i){
+                arrayStorage.save(new Resume());
+            }
+        }catch (FullStorageException e){
+            e.printStackTrace();
+            fail();
         }
 
         FullStorageException thrown = assertThrows(FullStorageException.class,
                 () ->{
-                    arrayStorage.save(new Resume());
+                    arrayStorage.save(RESUME_A);
                 });
     }
 
@@ -99,7 +110,7 @@ public abstract class AbstractArrayStorageTest {
     void get() {
         Object o = arrayStorage.get(UUID_3);
 
-        assertTrue(o.equals(new Resume(UUID_3)));
+        assertTrue(o.equals(RESUME_3));
     }
 
     @Test
@@ -126,14 +137,14 @@ public abstract class AbstractArrayStorageTest {
         // modifications
         arrayStorage.update(r);
 
-        assertTrue(r.equals(arrayStorage.get(UUID_4)));
+        assertTrue(r.equals(RESUME_4));
     }
 
     @Test
     void updateNotExist() {
         NotExistStorageException thrown = assertThrows(NotExistStorageException.class,
                 () ->{
-                    arrayStorage.update(new Resume(UUID_A));
+                    arrayStorage.update(RESUME_A);
                 });
     }
 
@@ -157,6 +168,10 @@ public abstract class AbstractArrayStorageTest {
         Resume[] r = arrayStorage.getAll();
 
         assertEquals(arrayStorage.size(), r.length);
+        assertEquals(RESUME_1, r[0]);
+        assertEquals(RESUME_2, r[1]);
+        assertEquals(RESUME_3, r[2]);
+        assertEquals(RESUME_4, r[3]);
     }
 
     @Test
