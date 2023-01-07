@@ -2,8 +2,12 @@ package com.jobresearch.webapp.resumemodule.storage;
 
 import com.jobresearch.webapp.resumemodule.model.Resume;
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
+
+    //private static final Comparator<Resume> RESUME_COMPARATOR = (r1, r2) -> r1.getUuid().compareTo(r2.getUuid());
+    //private static final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getUuid);
     @Override
     protected final void fillDeletedResume(int index) {
         int numMoved = size - index - 1;
@@ -19,9 +23,9 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         storage[index] = resume;
     }
 
-    protected final int findIndex(String uuid){
-        Resume key = new Resume(uuid);
-        int index = Arrays.binarySearch(storage, 0, size, key);
+    protected final Integer getSearchKey(String uuid){
+        Resume key = new Resume("", uuid);
+        int index = Arrays.binarySearch(storage, 0, size, key, RESUME_COMPARATOR_UUID);
 
         return index;
     }

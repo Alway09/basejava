@@ -3,77 +3,13 @@ package com.jobresearch.webapp.resumemodule.storage;
 import com.jobresearch.webapp.resumemodule.exception.*;
 import com.jobresearch.webapp.resumemodule.model.Resume;
 import java.util.Arrays;
+import java.util.List;
 
-public abstract class AbstractArrayStorage implements StorageInterface {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int STORAGE_MAX_SIZE = 10000;
     protected int size = 0;
     protected final Resume[] storage = new Resume[STORAGE_MAX_SIZE];
 
-    public final void save(Resume resume){
-        if(resume == null){
-            throw new NullStorageException();
-        }
-
-        if(size >= STORAGE_MAX_SIZE){
-            throw new FullStorageException();
-        }
-
-        int index = findIndex(resume.getUuid());
-
-        if(index >= 0) {
-            //throw new StorageException(resume.getUuid(), "Resume is duplicated");
-            throw new ExistStorageException(resume.getUuid());
-        }
-
-        insertResume(resume, index);
-        ++size;
-    }
-
-    @Override
-    public final void delete(String uuid){
-        if(uuid == null){
-            throw new NullStorageException();
-        }
-
-        int index = findIndex(uuid);
-
-        if(index < 0){
-            throw new NotExistStorageException(uuid);
-        }
-
-        fillDeletedResume(index);
-        storage[size - 1] = null;
-        --size;
-    }
-    @Override
-    public final Resume get(String uuid){
-        if(uuid == null){
-            throw new NullStorageException();
-        }
-
-        int index = findIndex(uuid);
-
-        if(index < 0){
-            throw new NotExistStorageException(uuid);
-        }
-
-        return storage[index];
-    }
-
-    @Override
-    public final void update(Resume resume){
-        if(resume == null){
-            throw new NullStorageException();
-        }
-
-        int index = findIndex(resume.getUuid());
-
-        if(index < 0){
-            throw new NotExistStorageException(resume.getUuid());
-        }
-
-        storage[index] = resume;
-    }
     @Override
     public final void clear(){
         if(size == 0){
@@ -83,16 +19,54 @@ public abstract class AbstractArrayStorage implements StorageInterface {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
+
+    /*@Override
+    public final List<Resume> getAllSorted(){
+        List<Resume> l = List.of(Arrays.copyOf(storage, size));
+        l.sort(RESUME_COMPARATOR_UUID);
+        return l;
+    }*/
     @Override
-    public final Resume[] getAll(){
-        return Arrays.copyOf(storage, size);
+    protected final List<Resume> doGetAllCopied(){
+        return Arrays.asList(Arrays.copyOf(storage, size));
     }
+
     @Override
     public final int size(){
         return size;
     }
+    @Override
+    protected final void doSave(Resume resume, Integer notExistedKey){
+        if(size == STORAGE_MAX_SIZE){
+            throw new FullStorageException();
+        }
+
+        insertResume(resume, notExistedKey);
+        ++size;
+    }
+
+    @Override
+    protected final void doDelete(Integer existedKey){
+        fillDeletedResume(existedKey);
+        storage[size - 1] = null;
+        --size;
+    }
+
+    @Override
+    protected final Resume doGet(Integer existedKey){
+        return storage[existedKey.intValue()];
+    }
+
+    @Override
+    protected final void doUpdate(Resume resume, Integer existedKey){
+        storage[existedKey.intValue()] = resume;
+    }
+
+    @Override
+    protected final boolean isExist(Integer key){
+        return key.intValue() >= 0;
+    }
 
     protected abstract void fillDeletedResume(int index);
     protected abstract void insertResume(Resume resume, int index);
-    protected abstract int findIndex(String uuid);
 }

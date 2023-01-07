@@ -65,7 +65,7 @@ public class Main {
     }
 
         static void printAll() {
-            Resume[] all = ARRAY_STORAGE.getAll();
+            /*Resume[] all = ARRAY_STORAGE.getAll();
             System.out.println("----------------------------");
             if (all.length == 0) {
                 System.out.println("Empty");
@@ -74,7 +74,7 @@ public class Main {
                     System.out.println(r);
                 }
             }
-            System.out.println("----------------------------");
+            System.out.println("----------------------------");*/
         }
 
 }

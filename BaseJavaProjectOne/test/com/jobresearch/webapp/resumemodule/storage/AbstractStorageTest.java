@@ -6,67 +6,58 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public abstract class AbstractArrayStorageTest {
-    private final StorageInterface arrayStorage;
-    private static final String UUID_1 = "UUID_1";
-    private static final Resume RESUME_1 = new Resume(UUID_1);
-    private static final String UUID_2 = "UUID_2";
-    private static final Resume RESUME_2 = new Resume(UUID_2);
-    private static final String UUID_3 = "UUID_3";
-    private static final Resume RESUME_3 = new Resume(UUID_3);
-    private static final String UUID_4 = "UUID_4";
-    private static final Resume RESUME_4 = new Resume(UUID_4);
-    private static final String UUID_A = "UUID_A";
-    private static final Resume RESUME_A = new Resume(UUID_A);
+public abstract class AbstractStorageTest {
+    protected final StorageInterface storageInterface;
+    protected static final String UUID_1 = "UUID_1";
+    protected static final String NAME_1 = "NAME_1";
+    protected static final Resume RESUME_1 = new Resume(NAME_1, UUID_1);
+    protected static final String UUID_2 = "UUID_2";
+    protected static final String NAME_2 = "NAME_2";
+    protected static final Resume RESUME_2 = new Resume(NAME_2, UUID_2);
+    protected static final String UUID_3 = "UUID_3";
+    protected static final String NAME_3 = "NAME_3";
+    protected static final Resume RESUME_3 = new Resume(NAME_3, UUID_3);
+    protected static final String UUID_4 = "UUID_4";
+    protected static final String NAME_4 = "NAME_4";
+    protected static final Resume RESUME_4 = new Resume(NAME_4, UUID_4);
+    protected static final String UUID_A = "UUID_A";
+    protected static final String NAME_A = "NAME_A";
+    protected static final Resume RESUME_A = new Resume(NAME_A, UUID_A);
 
-    public AbstractArrayStorageTest(StorageInterface storage){
-        arrayStorage = storage;
+    public AbstractStorageTest(StorageInterface storage){
+        storageInterface = storage;
     }
 
     @BeforeEach
     void setUp() {
-        arrayStorage.save(RESUME_1);
-        arrayStorage.save(RESUME_2);
-        arrayStorage.save(RESUME_3);
-        arrayStorage.save(RESUME_4);
+        storageInterface.save(RESUME_4);
+        storageInterface.save(RESUME_1);
+        storageInterface.save(RESUME_3);
+        storageInterface.save(RESUME_2);
     }
     @AfterEach
     void tearDown(){
-        arrayStorage.clear();
+        storageInterface.clear();
     }
 
     @Test
     void save() {
-        arrayStorage.save(RESUME_A);
+        storageInterface.save(RESUME_A);
         //assertEquals(UUID_A, arrayStorage.get(UUID_A).getUuid());
-        assertTrue(RESUME_A.getUuid().equals(arrayStorage.get(UUID_A).getUuid()));
-        assertEquals(5, arrayStorage.size());
+        assertTrue(RESUME_A.equals(storageInterface.get(UUID_A)));
+        assertEquals(5, storageInterface.size());
     }
 
     @Test
     void saveExist() {
         ExistStorageException thrown = assertThrows(ExistStorageException.class,
                 () ->{
-                    arrayStorage.save(RESUME_2);
-                });
-    }
-
-    @Test
-    void saveInFull() {
-        try{
-            for(int i = 5; i <= AbstractArrayStorage.STORAGE_MAX_SIZE; ++i){
-                arrayStorage.save(new Resume());
-            }
-        }catch (FullStorageException e){
-            e.printStackTrace();
-            fail();
-        }
-
-        FullStorageException thrown = assertThrows(FullStorageException.class,
-                () ->{
-                    arrayStorage.save(RESUME_A);
+                    storageInterface.save(RESUME_2);
                 });
     }
 
@@ -74,27 +65,27 @@ public abstract class AbstractArrayStorageTest {
     void saveNull() {
         NullStorageException thrown = assertThrows(NullStorageException.class,
                 () ->{
-                    arrayStorage.save(null);
+                    storageInterface.save(null);
                 });
     }
 
     @Test
     void delete() {
-        arrayStorage.delete(UUID_1);
+        storageInterface.delete(UUID_1);
 
         NotExistStorageException thrown = assertThrows(NotExistStorageException.class,
                 () ->{
-                    arrayStorage.get(UUID_1);
+                    storageInterface.get(UUID_1);
                 });
 
-        assertEquals(3, arrayStorage.size());
+        assertEquals(3, storageInterface.size());
     }
 
     @Test
     void deleteNotExist() {
         NotExistStorageException thrown = assertThrows(NotExistStorageException.class,
                 () ->{
-                    arrayStorage.delete(UUID_A);
+                    storageInterface.delete(UUID_A);
                 });
     }
 
@@ -102,13 +93,13 @@ public abstract class AbstractArrayStorageTest {
     void deleteNull() {
         NullStorageException thrown = assertThrows(NullStorageException.class,
                 () ->{
-                    arrayStorage.delete(null);
+                    storageInterface.delete(null);
                 });
     }
 
     @Test
     void get() {
-        Object o = arrayStorage.get(UUID_3);
+        Object o = storageInterface.get(UUID_3);
 
         assertTrue(o.equals(RESUME_3));
     }
@@ -117,7 +108,7 @@ public abstract class AbstractArrayStorageTest {
     void getNotExist() {
         NotExistStorageException thrown = assertThrows(NotExistStorageException.class,
                 () ->{
-                    arrayStorage.get(UUID_A);
+                    storageInterface.get(UUID_A);
                 });
 
         //assertEquals("Resume with UUID " + UUID_A + " not exist", thrown.getMessage());
@@ -127,15 +118,15 @@ public abstract class AbstractArrayStorageTest {
     void getNull() {
         NullStorageException thrown = assertThrows(NullStorageException.class,
                 () ->{
-                    arrayStorage.get(null);
+                    storageInterface.get(null);
                 });
     }
 
     @Test
     void update() {
-        Resume r = arrayStorage.get(UUID_4);
+        Resume r = storageInterface.get(UUID_4);
         // modifications
-        arrayStorage.update(r);
+        storageInterface.update(r);
 
         assertTrue(r.equals(RESUME_4));
     }
@@ -144,7 +135,7 @@ public abstract class AbstractArrayStorageTest {
     void updateNotExist() {
         NotExistStorageException thrown = assertThrows(NotExistStorageException.class,
                 () ->{
-                    arrayStorage.update(RESUME_A);
+                    storageInterface.update(RESUME_A);
                 });
     }
 
@@ -152,38 +143,39 @@ public abstract class AbstractArrayStorageTest {
     void updateNull() {
         NullStorageException thrown = assertThrows(NullStorageException.class,
                 () ->{
-                    arrayStorage.update(null);
+                    storageInterface.update(null);
                 });
     }
 
     @Test
     void clear() {
-        arrayStorage.clear();
+        storageInterface.clear();
 
-        assertEquals(0, arrayStorage.size());
+        assertEquals(0, storageInterface.size());
     }
 
     @Test
-    void getAll() {
-        Resume[] r = arrayStorage.getAll();
+    void getAllSorted() {
+        List<Resume> r = storageInterface.getAllSorted();
 
-        assertEquals(arrayStorage.size(), r.length);
-        assertEquals(RESUME_1, r[0]);
-        assertEquals(RESUME_2, r[1]);
-        assertEquals(RESUME_3, r[2]);
-        assertEquals(RESUME_4, r[3]);
+        assertEquals(storageInterface.size(), r.size());
+        assertEquals(r, Arrays.asList(RESUME_1, RESUME_2, RESUME_3, RESUME_4));
+        /*assertEquals(RESUME_1, r.get(0));
+        assertEquals(RESUME_2, r.get(1));
+        assertEquals(RESUME_3, r.get(2));
+        assertEquals(RESUME_4, r.get(3));*/
     }
 
     @Test
-    void getAllEmpty() {
-        arrayStorage.clear();
-        Resume[] r = arrayStorage.getAll();
+    void getAllSortedEmpty() {
+        storageInterface.clear();
+        List<Resume> r = storageInterface.getAllSorted();
 
-        assertEquals(0, r.length);
+        assertEquals(0, r.size());
     }
 
     @Test
     void size() {
-        assertEquals(4, arrayStorage.size());
+        assertEquals(4, storageInterface.size());
     }
 }
