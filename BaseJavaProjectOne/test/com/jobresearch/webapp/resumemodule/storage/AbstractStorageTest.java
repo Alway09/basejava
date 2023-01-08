@@ -1,11 +1,12 @@
 package com.jobresearch.webapp.resumemodule.storage;
 
 import com.jobresearch.webapp.resumemodule.exception.*;
-import com.jobresearch.webapp.resumemodule.model.Resume;
+import com.jobresearch.webapp.resumemodule.model.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,32 +14,59 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractStorageTest {
     protected final StorageInterface storageInterface;
-    protected static final String UUID_1 = "UUID_1";
-    protected static final String NAME_1 = "NAME_1";
-    protected static final Resume RESUME_1 = new Resume(NAME_1, UUID_1);
-    protected static final String UUID_2 = "UUID_2";
-    protected static final String NAME_2 = "NAME_2";
-    protected static final Resume RESUME_2 = new Resume(NAME_2, UUID_2);
-    protected static final String UUID_3 = "UUID_3";
-    protected static final String NAME_3 = "NAME_3";
-    protected static final Resume RESUME_3 = new Resume(NAME_3, UUID_3);
-    protected static final String UUID_4 = "UUID_4";
-    protected static final String NAME_4 = "NAME_4";
-    protected static final Resume RESUME_4 = new Resume(NAME_4, UUID_4);
-    protected static final String UUID_A = "UUID_A";
-    protected static final String NAME_A = "NAME_A";
-    protected static final Resume RESUME_A = new Resume(NAME_A, UUID_A);
+    private static final String UUID_1 = "uuid1";
+    private static final String UUID_2 = "uuid2";
+    private static final String UUID_3 = "uuid3";
+    private static final String UUID_4 = "uuid4";
+    private static final String UUID_A = "uuidA";
 
+    private static final Resume R1;
+    private static final Resume R2;
+    private static final Resume R3;
+    private static final Resume R4;
+    protected static final Resume RA;
+
+    static {
+        R1 = new Resume(UUID_1, "Name1");
+        R2 = new Resume(UUID_2, "Name2");
+        R3 = new Resume(UUID_3, "Name3");
+        R4 = new Resume(UUID_4, "Name4");
+        RA = new Resume(UUID_A, "NameA");
+
+        R1.addContact(ContactType.MAIL, "mail1@ya.ru");
+        R1.addContact(ContactType.PHONE, "11111");
+        R1.addSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
+        R1.addSection(SectionType.PERSONAL, new TextSection("Personal data"));
+        R1.addSection(SectionType.ACHIEVEMENT, new ListSection("Achivment11", "Achivment12", "Achivment13"));
+        R1.addSection(SectionType.QUALIFICATIONS, new ListSection("Java", "SQL", "JavaScript"));
+        R1.addSection(SectionType.EXPERIENCE,
+                new OrganizationSection(
+                        new Organization("Organization11", "http://Organization11.ru",
+                                new Organization.Position(2005, Month.JANUARY, "position1", "content1"),
+                                new Organization.Position(2001, Month.MARCH, 2005, Month.JANUARY, "position2", "content2"))));
+        R1.addSection(SectionType.EDUCATION,
+                new OrganizationSection(
+                        new Organization("Institute", null,
+                                new Organization.Position(1996, Month.JANUARY, 2000, Month.DECEMBER, "aspirant", null),
+                                new Organization.Position(2001, Month.MARCH, 2005, Month.JANUARY, "student", "IT facultet")),
+                        new Organization("Organization12", "http://Organization12.ru")));
+        R2.addContact(ContactType.SKYPE, "skype2");
+        R2.addContact(ContactType.PHONE, "22222");
+        R1.addSection(SectionType.EXPERIENCE,
+                new OrganizationSection(
+                        new Organization("Organization2", "http://Organization2.ru",
+                                new Organization.Position(2015, Month.JANUARY, "position1", "content1"))));
+    }
     public AbstractStorageTest(StorageInterface storage){
         storageInterface = storage;
     }
 
     @BeforeEach
     void setUp() {
-        storageInterface.save(RESUME_4);
-        storageInterface.save(RESUME_1);
-        storageInterface.save(RESUME_3);
-        storageInterface.save(RESUME_2);
+        storageInterface.save(R4);
+        storageInterface.save(R1);
+        storageInterface.save(R3);
+        storageInterface.save(R2);
     }
     @AfterEach
     void tearDown(){
@@ -47,9 +75,9 @@ public abstract class AbstractStorageTest {
 
     @Test
     void save() {
-        storageInterface.save(RESUME_A);
+        storageInterface.save(RA);
         //assertEquals(UUID_A, arrayStorage.get(UUID_A).getUuid());
-        assertTrue(RESUME_A.equals(storageInterface.get(UUID_A)));
+        assertTrue(RA.equals(storageInterface.get(UUID_A)));
         assertEquals(5, storageInterface.size());
     }
 
@@ -57,7 +85,7 @@ public abstract class AbstractStorageTest {
     void saveExist() {
         ExistStorageException thrown = assertThrows(ExistStorageException.class,
                 () ->{
-                    storageInterface.save(RESUME_2);
+                    storageInterface.save(R2);
                 });
     }
 
@@ -101,7 +129,7 @@ public abstract class AbstractStorageTest {
     void get() {
         Object o = storageInterface.get(UUID_3);
 
-        assertTrue(o.equals(RESUME_3));
+        assertTrue(o.equals(R3));
     }
 
     @Test
@@ -128,14 +156,14 @@ public abstract class AbstractStorageTest {
         // modifications
         storageInterface.update(r);
 
-        assertTrue(r.equals(RESUME_4));
+        assertTrue(r.equals(R4));
     }
 
     @Test
     void updateNotExist() {
         NotExistStorageException thrown = assertThrows(NotExistStorageException.class,
                 () ->{
-                    storageInterface.update(RESUME_A);
+                    storageInterface.update(RA);
                 });
     }
 
@@ -159,11 +187,11 @@ public abstract class AbstractStorageTest {
         List<Resume> r = storageInterface.getAllSorted();
 
         assertEquals(storageInterface.size(), r.size());
-        assertEquals(r, Arrays.asList(RESUME_1, RESUME_2, RESUME_3, RESUME_4));
-        /*assertEquals(RESUME_1, r.get(0));
-        assertEquals(RESUME_2, r.get(1));
-        assertEquals(RESUME_3, r.get(2));
-        assertEquals(RESUME_4, r.get(3));*/
+        assertEquals(r, Arrays.asList(R1, R2, R3, R4));
+        /*assertEquals(R1, r.get(0));
+        assertEquals(R2, r.get(1));
+        assertEquals(R3, r.get(2));
+        assertEquals(R4, r.get(3));*/
     }
 
     @Test

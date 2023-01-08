@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 public abstract class AbstractStorage<SK> implements StorageInterface{
     protected final static Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
     protected final Comparator<Resume> RESUME_COMPARATOR_UUID = Comparator.comparing(Resume::getUuid);
-    protected final Comparator<Resume> RESUME_COMPARATOR_NAME = Comparator.comparing(Resume::getFullName);
+    //protected final Comparator<Resume> RESUME_COMPARATOR_NAME = Comparator.comparing(Resume::getFullName);
 
     @Override
     public final void save(Resume resume) {

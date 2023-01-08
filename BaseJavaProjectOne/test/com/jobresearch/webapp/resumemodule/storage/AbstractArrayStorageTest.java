@@ -25,7 +25,7 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest{
 
         FullStorageException thrown = assertThrows(FullStorageException.class,
                 () ->{
-                    storageInterface.save(RESUME_A);
+                    storageInterface.save(RA);
                 });
     }
 }
