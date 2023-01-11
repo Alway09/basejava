@@ -6,6 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractStorageTest {
+    protected static final File STORAGE_DIR = new File("/Users/alvvay/Documents/JavaLearn/basejava/BaseJavaProjectOne/storage");
     protected final StorageInterface storageInterface;
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
@@ -27,6 +29,8 @@ public abstract class AbstractStorageTest {
     protected static final Resume RA;
 
     static {
+        //STORAGE_DIR_PATH = "/Users/alvvay/Documents/JavaLearn/basejava/BaseJavaProjectOne/storage";
+
         R1 = new Resume(UUID_1, "Name1");
         R2 = new Resume(UUID_2, "Name2");
         R3 = new Resume(UUID_3, "Name3");
