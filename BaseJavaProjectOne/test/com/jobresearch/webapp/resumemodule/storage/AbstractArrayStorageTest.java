@@ -15,7 +15,7 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest{
     @Test
     void saveInFull() {
         try{
-            for(int i = 5; i <= AbstractArrayStorage.STORAGE_MAX_SIZE; ++i){
+            for(int i = 4; i <= AbstractArrayStorage.STORAGE_MAX_SIZE; ++i){
                 storageInterface.save(new Resume("SomeName"));
             }
         }catch (FullStorageException e){
@@ -25,7 +25,7 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest{
 
         FullStorageException thrown = assertThrows(FullStorageException.class,
                 () ->{
-                    storageInterface.save(RA);
+                    storageInterface.save(new Resume("SomeName_exception"));
                 });
     }
 }

@@ -13,77 +13,35 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static com.jobresearch.webapp.resumemodule.TestData.*;
 
 public abstract class AbstractStorageTest {
     protected static final File STORAGE_DIR = Config.get().getStorageDir();
     protected final StorageInterface storageInterface;
-    private static final String UUID_1 = "uuid1";
-    private static final String UUID_2 = "uuid2";
-    private static final String UUID_3 = "uuid3";
-    private static final String UUID_4 = "uuid4";
-    private static final String UUID_A = "uuidA";
 
-    private static final Resume R1;
-    private static final Resume R2;
-    private static final Resume R3;
-    private static final Resume R4;
-    protected static final Resume RA;
-
-    static {
-        //STORAGE_DIR_PATH = "/Users/alvvay/Documents/JavaLearn/basejava/BaseJavaProjectOne/storage";
-
-        R1 = new Resume(UUID_1, "Name1");
-        R2 = new Resume(UUID_2, "Name2");
-        R3 = new Resume(UUID_3, "Name3");
-        R4 = new Resume(UUID_4, "Name4");
-        RA = new Resume(UUID_A, "NameA");
-
-        /*R1.addContact(ContactType.MAIL, "mail1@ya.ru");
-        R1.addContact(ContactType.PHONE, "11111");
-        R1.addSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
-        R1.addSection(SectionType.PERSONAL, new TextSection("Personal data"));
-        R1.addSection(SectionType.ACHIEVEMENT, new ListSection("Achivment11", "Achivment12", "Achivment13"));
-        R1.addSection(SectionType.QUALIFICATIONS, new ListSection("Java", "SQL", "JavaScript"));
-        R1.addSection(SectionType.EXPERIENCE,
-                new OrganizationSection(
-                        new Organization("Organization11", "http://Organization11.ru",
-                                new Organization.Position(2005, Month.JANUARY, "position1", "content1"),
-                                new Organization.Position(2001, Month.MARCH, 2005, Month.JANUARY, "position2", "content2"))));
-        R1.addSection(SectionType.EDUCATION,
-                new OrganizationSection(
-                        new Organization("Institute", null,
-                                new Organization.Position(1996, Month.JANUARY, 2000, Month.DECEMBER, "aspirant", null),
-                                new Organization.Position(2001, Month.MARCH, 2005, Month.JANUARY, "student", "IT facultet")),
-                        new Organization("Organization12", "http://Organization12.ru")));
-        R2.addContact(ContactType.SKYPE, "skype2");
-        R2.addContact(ContactType.PHONE, "22222");
-        R1.addSection(SectionType.EXPERIENCE,
-                new OrganizationSection(
-                        new Organization("Organization2", "http://Organization2.ru",
-                                new Organization.Position(2015, Month.JANUARY, "position1", "content1"))));*/
-    }
     public AbstractStorageTest(StorageInterface storage){
         storageInterface = storage;
     }
 
     @BeforeEach
     void setUp() {
-        storageInterface.save(R4);
+        //storageInterface.save(R4);
+        storageInterface.clear();
         storageInterface.save(R1);
         storageInterface.save(R3);
         storageInterface.save(R2);
     }
     @AfterEach
     void tearDown(){
-        storageInterface.clear();
+        //storageInterface.clear();
     }
 
     @Test
     void save() {
-        storageInterface.save(RA);
+        storageInterface.save(R4);
         //assertEquals(UUID_A, arrayStorage.get(UUID_A).getUuid());
-        assertTrue(RA.equals(storageInterface.get(UUID_A)));
-        assertEquals(5, storageInterface.size());
+        assertTrue(R4.equals(storageInterface.get(UUID_4)));
+        assertEquals(4, storageInterface.size());
     }
 
     @Test
@@ -111,14 +69,14 @@ public abstract class AbstractStorageTest {
                     storageInterface.get(UUID_1);
                 });
 
-        assertEquals(3, storageInterface.size());
+        assertEquals(2, storageInterface.size());
     }
 
     @Test
     void deleteNotExist() {
         NotExistStorageException thrown = assertThrows(NotExistStorageException.class,
                 () ->{
-                    storageInterface.delete(UUID_A);
+                    storageInterface.delete(UUID_4);
                 });
     }
 
@@ -141,7 +99,7 @@ public abstract class AbstractStorageTest {
     void getNotExist() {
         NotExistStorageException thrown = assertThrows(NotExistStorageException.class,
                 () ->{
-                    storageInterface.get(UUID_A);
+                    storageInterface.get(UUID_4);
                 });
 
         //assertEquals("Resume with UUID " + UUID_A + " not exist", thrown.getMessage());
@@ -157,18 +115,18 @@ public abstract class AbstractStorageTest {
 
     @Test
     void update() {
-        Resume r = storageInterface.get(UUID_4);
+        Resume r = storageInterface.get(UUID_2);
         // modifications
         storageInterface.update(r);
 
-        assertTrue(r.equals(R4));
+        assertTrue(r.equals(R2));
     }
 
     @Test
     void updateNotExist() {
         NotExistStorageException thrown = assertThrows(NotExistStorageException.class,
                 () ->{
-                    storageInterface.update(RA);
+                    storageInterface.update(R4);
                 });
     }
 
@@ -192,7 +150,7 @@ public abstract class AbstractStorageTest {
         List<Resume> r = storageInterface.getAllSorted();
 
         assertEquals(storageInterface.size(), r.size());
-        assertEquals(r, Arrays.asList(R1, R2, R3, R4));
+        assertEquals(r, Arrays.asList(R1, R2, R3));
         /*assertEquals(R1, r.get(0));
         assertEquals(R2, r.get(1));
         assertEquals(R3, r.get(2));
@@ -209,6 +167,6 @@ public abstract class AbstractStorageTest {
 
     @Test
     void size() {
-        assertEquals(4, storageInterface.size());
+        assertEquals(3, storageInterface.size());
     }
 }

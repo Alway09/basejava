@@ -1,0 +1,26 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="resumes:Web exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/resumes_Web_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="BaseJavaProjectOne/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="BaseJavaProjectOne" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="postgresql-42.5.1" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/gson-2.7.jar" />
+          <element id="file-copy" path="$MAVEN_REPOSITORY$/org/junit/jupiter/junit-jupiter/5.8.1/junit-jupiter-5.8.1.jar" />
+          <element id="file-copy" path="$MAVEN_REPOSITORY$/org/junit/jupiter/junit-jupiter-api/5.8.1/junit-jupiter-api-5.8.1.jar" />
+          <element id="file-copy" path="$MAVEN_REPOSITORY$/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar" />
+          <element id="file-copy" path="$MAVEN_REPOSITORY$/org/junit/platform/junit-platform-commons/1.8.1/junit-platform-commons-1.8.1.jar" />
+          <element id="file-copy" path="$MAVEN_REPOSITORY$/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar" />
+          <element id="file-copy" path="$MAVEN_REPOSITORY$/org/junit/jupiter/junit-jupiter-params/5.8.1/junit-jupiter-params-5.8.1.jar" />
+          <element id="file-copy" path="$MAVEN_REPOSITORY$/org/junit/jupiter/junit-jupiter-engine/5.8.1/junit-jupiter-engine-5.8.1.jar" />
+          <element id="file-copy" path="$MAVEN_REPOSITORY$/org/junit/platform/junit-platform-engine/1.8.1/junit-platform-engine-1.8.1.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/jstl-1.2.jar" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

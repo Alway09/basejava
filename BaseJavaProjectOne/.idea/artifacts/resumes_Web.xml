@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="resumes:Web">
+    <output-path>$PROJECT_DIR$/out/artifacts/resumes_Web</output-path>
+    <root id="archive" name="resumes_Web.war">
+      <element id="artifact" artifact-name="resumes:Web exploded" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="lib">
+          <element id="file-copy" path="$PROJECT_DIR$/lib/javax.servlet.jsp.jstl.jar" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

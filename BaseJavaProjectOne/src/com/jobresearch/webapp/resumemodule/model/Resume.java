@@ -34,6 +34,7 @@ public class Resume implements Comparable<Resume>, Serializable {
         return uuid;
     }
     public String getFullName(){ return fullName; }
+    public void setFullName(String newName) {fullName = newName; }
 
     public String getContact(ContactType type) {
         return contacts.get(type);
