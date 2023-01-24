@@ -21,7 +21,6 @@ public class SqlStorage implements StorageInterface{
         } catch (ClassNotFoundException e) {
             throw new IllegalStateException(e);
         }
-
         sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
     }
 
@@ -32,10 +31,6 @@ public class SqlStorage implements StorageInterface{
 
     @Override
     public Resume get(String uuid) {
-        if(uuid == null){
-            throw new NullStorageException();
-        }
-
         return sqlHelper.transactionalExecute(conn -> {
             Resume r;
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume WHERE uuid =?")) {
@@ -69,10 +64,6 @@ public class SqlStorage implements StorageInterface{
 
     @Override
     public void update(Resume r) {
-        if(r == null){
-            throw new NullStorageException();
-        }
-
         sqlHelper.transactionalExecute(conn -> {
             try (PreparedStatement ps = conn.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?")) {
                 ps.setString(1, r.getFullName());
@@ -91,9 +82,6 @@ public class SqlStorage implements StorageInterface{
 
     @Override
     public void save(Resume r) {
-        if(r == null){
-            throw new NullStorageException();
-        }
         sqlHelper.transactionalExecute(conn -> {
                     try (PreparedStatement ps = conn.prepareStatement("INSERT INTO resume (uuid, full_name) VALUES (?,?)")) {
                         ps.setString(1, r.getUuid());
@@ -109,10 +97,6 @@ public class SqlStorage implements StorageInterface{
 
     @Override
     public void delete(String uuid) {
-        if(uuid == null){
-            throw new NullStorageException();
-        }
-
         sqlHelper.execute("DELETE FROM resume WHERE uuid=?", ps -> {
             ps.setString(1, uuid);
             if (ps.executeUpdate() == 0) {
@@ -206,7 +190,7 @@ public class SqlStorage implements StorageInterface{
     private void addContact(ResultSet rs, Resume r) throws SQLException {
         String value = rs.getString("value");
         if (value != null) {
-            r.addContact(ContactType.valueOf(rs.getString("type")), value);
+            r.setContact(ContactType.valueOf(rs.getString("type")), value);
         }
     }
 
@@ -214,7 +198,7 @@ public class SqlStorage implements StorageInterface{
         String content = rs.getString("content");
         if (content != null) {
             SectionType type = SectionType.valueOf(rs.getString("type"));
-            r.addSection(type, JsonParser.read(content, Section.class));
+            r.setSection(type, JsonParser.read(content, Section.class));
         }
     }
 }
